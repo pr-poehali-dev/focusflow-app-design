@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
-import { Tab, INITIAL_TASKS, INITIAL_REMINDERS } from "@/components/planner/types";
+import { Tab, INITIAL_TASKS, INITIAL_REMINDERS, Reminder } from "@/components/planner/types";
 import HomeTab from "@/components/planner/HomeTab";
 import TasksTab from "@/components/planner/TasksTab";
 import TipsTab from "@/components/planner/TipsTab";
@@ -13,6 +13,12 @@ export default function Index() {
   const [reminders, setReminders] = useState(INITIAL_REMINDERS);
   const [newTaskText, setNewTaskText] = useState("");
   const [showAddTask, setShowAddTask] = useState(false);
+  const [theme, setTheme] = useState("warm");
+
+  // Применяем тему через data-theme на <html>
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   const completedTasks = tasks.filter((t) => t.done).length;
   const totalTasks = tasks.length;
@@ -58,6 +64,10 @@ export default function Index() {
     setReminders((prev) => prev.map((r) => (r.id === id ? { ...r, active: !r.active } : r)));
   };
 
+  const addReminder = (r: Omit<Reminder, "id">) => {
+    setReminders((prev) => [...prev, { ...r, id: Date.now() }]);
+  };
+
   const navItems: { id: Tab; icon: string; label: string }[] = [
     { id: "home", icon: "Home", label: "Главная" },
     { id: "tasks", icon: "CheckSquare", label: "Задачи" },
@@ -67,7 +77,7 @@ export default function Index() {
   ];
 
   const tabTitles: Record<Tab, string> = {
-    home: "Уютный планер",
+    home: "FocusFlow",
     tasks: "Мои задачи",
     reminders: "Напоминания",
     progress: "Прогресс",
@@ -77,23 +87,21 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center" style={{ background: "var(--warm-cream)" }}>
+    <div className="min-h-screen flex flex-col items-center" style={{ background: "var(--app-bg)" }}>
       <div className="w-full max-w-md flex flex-col min-h-screen relative">
         {/* Header */}
-        <div className="px-5 pt-8 pb-4">
+        <div className="px-5 pt-8 pb-3">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium" style={{ color: "var(--warm-terra)" }}>
-                {new Date().toLocaleDateString("ru-RU", { weekday: "long", day: "numeric", month: "long" })}
-              </p>
-              <h1 className="text-2xl font-semibold" style={{ color: "var(--warm-brown)" }}>
-                {tabTitles[tab]}
-              </h1>
-            </div>
+            <h1
+              className="text-2xl font-extrabold"
+              style={{ color: "var(--app-text)", fontFamily: "Nunito, sans-serif" }}
+            >
+              {tabTitles[tab]}
+            </h1>
             <button
               onClick={() => setTab("settings")}
-              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-lg font-bold"
-              style={{ background: "var(--warm-terra)" }}
+              className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-lg font-extrabold"
+              style={{ background: "var(--app-primary)" }}
             >
               А
             </button>
@@ -125,24 +133,28 @@ export default function Index() {
               addTask={addTask}
             />
           )}
-          {tab === "reminders" && <RemindersTab reminders={reminders} toggleReminder={toggleReminder} />}
+          {tab === "reminders" && (
+            <RemindersTab reminders={reminders} toggleReminder={toggleReminder} onAdd={addReminder} />
+          )}
           {tab === "progress" && <ProgressTab tasks={tasks} />}
           {tab === "tips" && <TipsTab />}
           {tab === "companion" && <CompanionTab />}
-          {tab === "settings" && <SettingsTab />}
+          {tab === "settings" && (
+            <SettingsTab currentTheme={theme} onThemeChange={setTheme} />
+          )}
         </div>
 
         {/* Bottom Navigation */}
         <div
           className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-4 pb-6 pt-3"
-          style={{ background: "linear-gradient(to top, var(--warm-cream) 70%, transparent)" }}
+          style={{ background: `linear-gradient(to top, var(--app-bg) 70%, transparent)` }}
         >
           <div
             className="flex justify-around items-center rounded-2xl px-2 py-2"
             style={{
-              background: "rgba(255,251,245,0.97)",
-              border: "1px solid var(--warm-sand)",
-              boxShadow: "0 -4px 30px rgba(107,63,40,0.08)",
+              background: "var(--app-nav-bg)",
+              border: "1px solid var(--app-nav-border)",
+              boxShadow: `0 -4px 30px var(--app-shadow)`,
             }}
           >
             {navItems.map((item) => (
