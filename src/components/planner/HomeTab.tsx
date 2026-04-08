@@ -26,7 +26,7 @@ export default function HomeTab({
       <div className="warm-card p-5">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-xs font-medium uppercase tracking-wide" style={{ color: "var(--warm-terra)" }}>
+            <p className="text-xs font-medium" style={{ color: "var(--warm-terra)" }}>
               Прогресс дня
             </p>
             <p className="text-3xl font-bold mt-1" style={{ color: "var(--warm-brown)" }}>
@@ -51,23 +51,29 @@ export default function HomeTab({
         </div>
         <p className="text-xs mt-2" style={{ color: "var(--warm-terra)", opacity: 0.7 }}>
           {completedTasks === totalTasks && totalTasks > 0
-            ? "🎉 Все задачи выполнены!"
+            ? "Все задачи выполнены!"
             : `Осталось ${totalTasks - completedTasks} задач`}
         </p>
       </div>
 
-      {/* Motivational quote */}
+      {/* Motivational quote — без стикеров, мягкий блок */}
       <div
-        className="warm-card p-4 relative overflow-hidden"
-        style={{ background: "linear-gradient(135deg, rgba(196,113,74,0.12), rgba(240,160,122,0.08))" }}
+        className="warm-card p-4"
+        style={{ background: "linear-gradient(135deg, rgba(196,113,74,0.1), rgba(240,160,122,0.07))" }}
       >
-        <p className="font-caveat text-xl" style={{ color: "var(--warm-brown)" }}>
-          "Каждый маленький шаг ведёт к большой цели"
-        </p>
-        <p className="text-xs mt-1" style={{ color: "var(--warm-terra)", opacity: 0.7 }}>
+        <p className="text-xs font-medium mb-1" style={{ color: "var(--warm-terra)" }}>
           Совет дня
         </p>
-        <div className="absolute right-4 top-3 text-4xl opacity-20">✨</div>
+        <p className="font-caveat text-xl leading-snug" style={{ color: "var(--warm-brown)" }}>
+          "Каждый маленький шаг ведёт к большой цели"
+        </p>
+        <button
+          className="mt-3 text-xs font-medium px-3 py-1.5 rounded-xl"
+          style={{ background: "var(--warm-terra)", color: "white" }}
+          onClick={() => setTab("tips")}
+        >
+          Все советы
+        </button>
       </div>
 
       {/* Urgent tasks */}
@@ -75,7 +81,7 @@ export default function HomeTab({
         <div>
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-semibold" style={{ color: "var(--warm-brown)" }}>
-              🔥 Срочные задачи
+              Срочные задачи
             </p>
             <button
               className="text-xs font-medium"
@@ -111,7 +117,7 @@ export default function HomeTab({
       <div>
         <div className="flex items-center justify-between mb-2">
           <p className="text-sm font-semibold" style={{ color: "var(--warm-brown)" }}>
-            ⏰ Напоминания сегодня
+            Напоминания сегодня
           </p>
           <button
             className="text-xs font-medium"

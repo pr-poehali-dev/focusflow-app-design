@@ -3,7 +3,9 @@ import Icon from "@/components/ui/icon";
 import { Tab, INITIAL_TASKS, INITIAL_REMINDERS } from "@/components/planner/types";
 import HomeTab from "@/components/planner/HomeTab";
 import TasksTab from "@/components/planner/TasksTab";
-import { RemindersTab, StatsTab, SettingsTab } from "@/components/planner/OtherTabs";
+import TipsTab from "@/components/planner/TipsTab";
+import CompanionTab from "@/components/planner/CompanionTab";
+import { RemindersTab, ProgressTab, SettingsTab } from "@/components/planner/OtherTabs";
 
 export default function Index() {
   const [tab, setTab] = useState<Tab>("home");
@@ -59,16 +61,18 @@ export default function Index() {
   const navItems: { id: Tab; icon: string; label: string }[] = [
     { id: "home", icon: "Home", label: "Главная" },
     { id: "tasks", icon: "CheckSquare", label: "Задачи" },
-    { id: "reminders", icon: "Bell", label: "Напомин." },
-    { id: "stats", icon: "BarChart2", label: "Статист." },
-    { id: "settings", icon: "Settings", label: "Настройки" },
+    { id: "tips", icon: "Lightbulb", label: "Советы" },
+    { id: "progress", icon: "BarChart2", label: "Прогресс" },
+    { id: "companion", icon: "Heart", label: "Друг" },
   ];
 
   const tabTitles: Record<Tab, string> = {
-    home: "Добрый день! ☀️",
+    home: "Уютный планер",
     tasks: "Мои задачи",
     reminders: "Напоминания",
-    stats: "Аналитика",
+    progress: "Прогресс",
+    tips: "Советы",
+    companion: "Компаньон",
     settings: "Настройки",
   };
 
@@ -86,12 +90,13 @@ export default function Index() {
                 {tabTitles[tab]}
               </h1>
             </div>
-            <div
+            <button
+              onClick={() => setTab("settings")}
               className="w-10 h-10 rounded-2xl flex items-center justify-center text-white text-lg font-bold"
               style={{ background: "var(--warm-terra)" }}
             >
               А
-            </div>
+            </button>
           </div>
         </div>
 
@@ -121,7 +126,9 @@ export default function Index() {
             />
           )}
           {tab === "reminders" && <RemindersTab reminders={reminders} toggleReminder={toggleReminder} />}
-          {tab === "stats" && <StatsTab tasks={tasks} />}
+          {tab === "progress" && <ProgressTab tasks={tasks} />}
+          {tab === "tips" && <TipsTab />}
+          {tab === "companion" && <CompanionTab />}
           {tab === "settings" && <SettingsTab />}
         </div>
 

@@ -16,7 +16,12 @@ export function RemindersTab({ reminders, toggleReminder }: RemindersTabProps) {
         className="warm-card p-4 flex items-center gap-3"
         style={{ background: "linear-gradient(135deg, rgba(196,113,74,0.12), rgba(240,160,122,0.06))" }}
       >
-        <div className="text-3xl">🔔</div>
+        <div
+          className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style={{ background: "var(--warm-terra)" }}
+        >
+          <Icon name="Bell" size={18} className="text-white" />
+        </div>
         <div>
           <p className="text-sm font-semibold" style={{ color: "var(--warm-brown)" }}>
             Уведомления настроены
@@ -87,13 +92,13 @@ export function RemindersTab({ reminders, toggleReminder }: RemindersTabProps) {
   );
 }
 
-// ── STATS TAB ─────────────────────────────────────────────────────
+// ── PROGRESS TAB ─────────────────────────────────────────────────
 
-interface StatsTabProps {
+interface ProgressTabProps {
   tasks: Task[];
 }
 
-export function StatsTab({ tasks }: StatsTabProps) {
+export function ProgressTab({ tasks }: ProgressTabProps) {
   const byCategory = tasks.reduce<Record<string, { total: number; done: number }>>((acc, t) => {
     if (!acc[t.category]) acc[t.category] = { total: 0, done: 0 };
     acc[t.category].total++;
@@ -113,23 +118,58 @@ export function StatsTab({ tasks }: StatsTabProps) {
 
   const maxTotal = Math.max(...weekData.map((d) => d.total));
 
+  const achievements = [
+    { label: "Дней подряд", value: "5", icon: "Flame", desc: "личный рекорд" },
+    { label: "Задач за неделю", value: "17", icon: "CheckCircle", desc: "выполнено" },
+    { label: "Часов фокуса", value: "12", icon: "Timer", desc: "на этой неделе" },
+    { label: "Советов применено", value: "3", icon: "Sparkles", desc: "из раздела советов" },
+  ];
+
   return (
     <div className="space-y-4 animate-fade-in">
+      {/* Achievements */}
+      <div>
+        <p className="text-sm font-semibold mb-3" style={{ color: "var(--warm-brown)" }}>
+          Твои достижения
+        </p>
+        <div className="grid grid-cols-2 gap-3">
+          {achievements.map((a, i) => (
+            <div key={i} className="warm-card p-4">
+              <div
+                className="w-9 h-9 rounded-2xl flex items-center justify-center mb-2"
+                style={{ background: "var(--warm-beige)" }}
+              >
+                <Icon name={a.icon} size={18} style={{ color: "var(--warm-terra)" }} />
+              </div>
+              <p className="text-2xl font-bold" style={{ color: "var(--warm-brown)" }}>
+                {a.value}
+              </p>
+              <p className="text-xs font-medium mt-0.5" style={{ color: "var(--warm-brown)" }}>
+                {a.label}
+              </p>
+              <p className="text-xs" style={{ color: "var(--warm-terra)", opacity: 0.6 }}>
+                {a.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Week Chart */}
       <div className="warm-card p-5">
         <p className="text-sm font-semibold mb-4" style={{ color: "var(--warm-brown)" }}>
-          📊 Задачи за неделю
+          Задачи за неделю
         </p>
         <div className="flex items-end gap-2 h-32">
           {weekData.map((d, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-1">
               <div className="w-full relative" style={{ height: 96 }}>
                 <div
-                  className="w-full rounded-lg absolute bottom-0"
+                  className="w-full rounded-xl absolute bottom-0"
                   style={{ height: `${(d.total / maxTotal) * 100}%`, background: "var(--warm-beige)" }}
                 />
                 <div
-                  className="w-full rounded-lg absolute bottom-0 transition-all duration-700"
+                  className="w-full rounded-xl absolute bottom-0 transition-all duration-700"
                   style={{
                     height: `${(d.done / maxTotal) * 100}%`,
                     background: "linear-gradient(180deg, var(--warm-peach), var(--warm-terra))",
@@ -144,14 +184,14 @@ export function StatsTab({ tasks }: StatsTabProps) {
         </div>
         <div className="flex gap-4 mt-3">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded" style={{ background: "var(--warm-terra)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ background: "var(--warm-terra)" }} />
             <span className="text-xs" style={{ color: "var(--warm-terra)" }}>
               Выполнено
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div
-              className="w-3 h-3 rounded"
+              className="w-3 h-3 rounded-full"
               style={{ background: "var(--warm-beige)", border: "1px solid var(--warm-sand)" }}
             />
             <span className="text-xs" style={{ color: "var(--warm-terra)", opacity: 0.7 }}>
@@ -159,29 +199,6 @@ export function StatsTab({ tasks }: StatsTabProps) {
             </span>
           </div>
         </div>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "Средний балл", value: "82%", icon: "TrendingUp", desc: "за эту неделю" },
-          { label: "Серия дней", value: "5 🔥", icon: "Zap", desc: "дней подряд" },
-          { label: "Лучший день", value: "Вт", icon: "Star", desc: "все задачи выполнены" },
-          { label: "Всего задач", value: String(tasks.length), icon: "List", desc: "в списке" },
-        ].map((s, i) => (
-          <div key={i} className="warm-card p-4">
-            <Icon name={s.icon} size={20} style={{ color: "var(--warm-terra)" }} />
-            <p className="text-2xl font-bold mt-2" style={{ color: "var(--warm-brown)" }}>
-              {s.value}
-            </p>
-            <p className="text-xs font-medium" style={{ color: "var(--warm-brown)" }}>
-              {s.label}
-            </p>
-            <p className="text-xs" style={{ color: "var(--warm-terra)", opacity: 0.6 }}>
-              {s.desc}
-            </p>
-          </div>
-        ))}
       </div>
 
       {/* By Category */}

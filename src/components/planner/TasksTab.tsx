@@ -81,7 +81,7 @@ export default function TasksTab({
       {active.length > 0 && (
         <div>
           <p
-            className="text-xs font-semibold uppercase tracking-wide mb-2"
+            className="text-xs font-medium mb-2"
             style={{ color: "var(--warm-terra)", opacity: 0.7 }}
           >
             В работе · {active.length}
@@ -103,7 +103,7 @@ export default function TasksTab({
       {done.length > 0 && (
         <div>
           <p
-            className="text-xs font-semibold uppercase tracking-wide mb-2"
+            className="text-xs font-medium mb-2"
             style={{ color: "var(--warm-green)", opacity: 0.8 }}
           >
             Выполнено · {done.length}
@@ -185,7 +185,7 @@ function TaskCard({
                   style={{ color: "var(--warm-terra)" }}
                   onClick={() => toggleExpand(task.id)}
                 >
-                  {task.expanded ? "Скрыть ↑" : "Показать ↓"}
+                  {task.expanded ? "Скрыть" : "Показать"}
                 </button>
               </div>
               <div className="progress-bar">
